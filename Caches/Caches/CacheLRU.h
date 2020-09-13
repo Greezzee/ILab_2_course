@@ -26,21 +26,21 @@ public:
 private:
 
     typedef typename std::list<T>::iterator list_it;
-    size_t _size;
+    size_t size_;
 
 	/*
 	* Cache list
 	*
 	* Access from outside the function CacheLFU::LookUp may brake whole cache
 	*/
-    std::list<T> _cache;
+    std::list<T> cache_;
 
 	/*
 	* Contain pairs of id and iterator to the element with this id in _cache
 	*
 	* Access from outside the function CacheLRU::LookUp may brake whole cache
 	*/
-    std::unordered_map<Ktype, list_it> _hash;
+    std::unordered_map<Ktype, list_it> hash_;
 
     bool IsFull() const;
 };
@@ -49,40 +49,40 @@ private:
 template <typename T, typename Ktype>
 bool CacheLRU<T, Ktype>::LookUp(const T* elem)
 {
-	auto hit = _hash.find(elem->id); //try to find elem in cache
+	auto hit = hash_.find(elem->id); //try to find elem in cache
 
-	if (hit == _hash.end()) { //if elem not in cache
+	if (hit == hash_.end()) { //if elem not in cache
 		if (IsFull()) { //remove last element from cache
-			_hash.erase(_cache.back().id);
-			_cache.pop_back();
+			hash_.erase(cache_.back().id);
+			cache_.pop_back();
 		}
-		_cache.push_front(*elem); //put elem to cache
-		_hash[elem->id] = _cache.begin();
+		cache_.push_front(*elem); //put elem to cache
+		hash_[elem->id] = cache_.begin();
 		return false;
 	}
 
 	auto hit_it = hit->second; //if elem in cache, move it to beginning of _cache
-	if (hit_it != _cache.begin())
-		_cache.splice(_cache.begin(), _cache, hit_it, std::next(hit_it));
+	if (hit_it != cache_.begin())
+		cache_.splice(cache_.begin(), cache_, hit_it, std::next(hit_it));
 	return true;
 }
 
 template <typename T, typename Ktype>
 bool CacheLRU<T, Ktype>::IsFull() const
 {
-	return _cache.size() >= _size;
+	return cache_.size() >= size_;
 }
 
 template <typename T, typename Ktype>
 void CacheLRU<T, Ktype>::SetSize(size_t new_size)
 {
-	_size = new_size;
+	size_ = new_size;
 }
 
 template <typename T, typename Ktype>
 void CacheLRU<T, Ktype>::PrintCache()
 {
-	for (auto i = _cache.begin(); i != _cache.end(); i++)
+	for (auto i = cache_.begin(); i != cache_.end(); i++)
 		std::cout << i->id << " ";
 	std::cout << "\n";
 }
@@ -90,7 +90,7 @@ void CacheLRU<T, Ktype>::PrintCache()
 template <typename T, typename Ktype>
 void CacheLRU<T, Ktype>::ClearCache()
 {
-	_hash.clear();
-	_cache.clear();
+	hash_.clear();
+	cache_.clear();
 }
 

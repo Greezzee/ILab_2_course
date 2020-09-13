@@ -25,21 +25,21 @@ public:
 	void ClearCache() override;
 private:
 	typedef typename std::vector<T>::iterator list_it;
-	size_t _size;
+	size_t size_;
 
 	/*
 	* Cache array
 	*
 	* Access from outside the function CacheRNG::LookUp may brake whole cache
 	*/
-	std::vector<T> _cache;
+	std::vector<T> cache_;
 
 	/*
 	* Contain pairs of id and iterator to the element with this id in _cache
 	*
 	* Access from outside the function CacheRNG::LookUp may brake whole cache
 	*/
-	std::unordered_map<Ktype, list_it> _hash;
+	std::unordered_map<Ktype, list_it> hash_;
 
 	bool IsFull() const;
 };
@@ -48,18 +48,18 @@ private:
 template <typename T, typename Ktype>
 bool CacheRNG<T, Ktype>::LookUp(const T* elem)
 {
-	auto hit = _hash.find(elem->id); //try to find elem in _cache
+	auto hit = hash_.find(elem->id); //try to find elem in _cache
 
-	if (hit == _hash.end()) { //if it not in cache
+	if (hit == hash_.end()) { //if it not in cache
 		if (IsFull()) { //if _cache is full, replace random element in _cache to elem
-			size_t pos = std::rand() % _size;
-			_hash.erase(_cache[pos].id);
-			_cache[pos] = *elem;
-			_hash[elem->id] = _cache.begin() + pos;
+			size_t pos = std::rand() % size_;
+			hash_.erase(cache_[pos].id);
+			cache_[pos] = *elem;
+			hash_[elem->id] = cache_.begin() + pos;
 		}
 		else { //if _cache not full, add elem to cache
-			_cache.push_back(*elem);
-			_hash[elem->id] = _cache.end() - 1;
+			cache_.push_back(*elem);
+			hash_[elem->id] = cache_.end() - 1;
 		}
 		return false;
 	}
@@ -71,19 +71,19 @@ bool CacheRNG<T, Ktype>::LookUp(const T* elem)
 template <typename T, typename Ktype>
 bool CacheRNG<T, Ktype>::IsFull() const
 {
-	return _cache.size() >= _size;
+	return cache_.size() >= size_;
 }
 
 template <typename T, typename Ktype>
 void CacheRNG<T, Ktype>::SetSize(size_t new_size)
 {
-	_size = new_size;
+	size_ = new_size;
 }
 
 template <typename T, typename Ktype>
 void CacheRNG<T, Ktype>::PrintCache()
 {
-	for (auto i = _cache.begin(); i != _cache.end(); i++)
+	for (auto i = cache_.begin(); i != cache_.end(); i++)
 		std::cout << i->id << " ";
 	std::cout << "\n";
 }
@@ -91,6 +91,6 @@ void CacheRNG<T, Ktype>::PrintCache()
 template <typename T, typename Ktype>
 void CacheRNG<T, Ktype>::ClearCache()
 {
-	_hash.clear();
-	_cache.clear();
+	hash_.clear();
+	cache_.clear();
 }
