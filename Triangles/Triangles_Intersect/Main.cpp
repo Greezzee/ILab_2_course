@@ -1,11 +1,7 @@
 #include "Collider.h"
 #include "Space.h"
-#include <vector>
 #include <iostream>
 #include <fstream>
-#include <unordered_map>
-#include <set>
-#include <ctime>
 
 struct CollidableTriangle {
 	PolygonCollider collider;
@@ -14,7 +10,6 @@ struct CollidableTriangle {
 
 int main()
 {
-	unsigned time = clock();
 	std::ifstream file;
 	file.open("10000.1.txt");
 
@@ -35,8 +30,6 @@ int main()
 	file.close();
 	space.CreateSpace();
 	space.FindAndPrintCollidingTriangles();
-
-	std::cout << "\nWorking time = " << clock() - time << "ms\n";
 
 	return 0;
 }
