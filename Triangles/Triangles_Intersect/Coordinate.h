@@ -48,3 +48,39 @@ const Vector3F operator*(const Vector3F& a, float b);
 const Vector3F operator/(const Vector3F& a, float b);
 const bool operator==(const Vector3F& a, const Vector3F& b);
 const bool operator!=(const Vector3F& a, const Vector3F& b);
+
+
+struct Vector3I
+{
+	int x, y, z;
+
+	//! Make vector (0, 0, 0)
+	Vector3I();
+
+	//! Make vector (a, b, c)
+	Vector3I(int a, int b, int c);
+
+	Vector3I(const Vector3I& that);
+
+	//! Arithmetic operations is like ordinary vector operation in math.
+	/*!
+	* Added special operation: Vector3F * Vector3F and Vector3F / Vector3F
+	* (a1, b1, c1) * (a2, b2, c2) = (a1 * a2, b1 * b2, c1 * c2)
+	* (a1, b1, c1) / (a2, b2, c2) = (a1 / a2, b1 / b2, c1 / c2)
+	*/
+	const Vector3I& operator=(const Vector3I& that);
+	const Vector3I& operator+=(const Vector3I& that);
+	const Vector3I& operator-=(const Vector3I& that);
+};
+
+const Vector3I& operator+(const Vector3I& that);
+const Vector3I operator-(const Vector3I& that);
+const Vector3I operator+(const Vector3I& a, const Vector3I& b);
+const Vector3I operator*(const Vector3I& a, const Vector3I& b);
+const Vector3I operator/(const Vector3I& a, const Vector3I& b);
+const Vector3I operator-(const Vector3I& a, const Vector3I& b);
+const Vector3I operator*(float a, const Vector3I& b);
+const Vector3I operator*(const Vector3I& a, float b);
+const Vector3I operator/(const Vector3I& a, float b);
+const bool operator==(const Vector3I& a, const Vector3I& b);
+const bool operator!=(const Vector3I& a, const Vector3I& b);

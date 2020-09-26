@@ -1,12 +1,10 @@
-#include "pch.h"
+//#include "pch.h"
 #include "Collider.h"
 
 #include <cmath>
 
 #include "Coordinate.h"
 #include "math.h"
-
-const float EPS = 0.00001f;
 
 bool Collider::IsCollide(const PolygonCollider& a, const PolygonCollider& b)
 {

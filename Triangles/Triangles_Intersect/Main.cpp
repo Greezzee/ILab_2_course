@@ -1,8 +1,11 @@
 #include "Collider.h"
+#include "Space.h"
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include <unordered_map>
 #include <set>
+#include <ctime>
 
 struct CollidableTriangle {
 	PolygonCollider collider;
@@ -11,29 +14,29 @@ struct CollidableTriangle {
 
 int main()
 {
-	size_t triangle_count = 0;
-	std::cin >> triangle_count;
+	unsigned time = clock();
+	std::ifstream file;
+	file.open("10000.1.txt");
 
-	CollidableTriangle* triangles = new CollidableTriangle[triangle_count];
+	size_t triangle_count = 0;
+	file >> triangle_count;
+
+	Space space;
 	for (size_t i = 0; i < triangle_count; i++) {
 		Vector3F a, b, c;
-		std::cin >> a.x >> a.y >> a.z;
-		std::cin >> b.x >> b.y >> b.z;
-		std::cin >> c.x >> c.y >> c.z;
+		file >> a.x >> a.y >> a.z;
+		file >> b.x >> b.y >> b.z;
+		file >> c.x >> c.y >> c.z;
 		std::vector<Vector3F> triangle_points = {a, b, c};
-		triangles[i].collider.Init(triangle_points);
+		PolygonCollider collider;
+		collider.Init(triangle_points);
+		space.AddTriangle(collider);
 	}
+	file.close();
+	space.CreateSpace();
+	space.FindAndPrintCollidingTriangles();
 
-	for (size_t i = 0; i < triangle_count; i++) {
-		for (size_t j = i + 1; j < triangle_count; j++) {
-			if (Collider::IsCollide(triangles[i].collider, triangles[j].collider)) {
-				triangles[i].is_collide_with_others = true;
-				triangles[j].is_collide_with_others = true;
-			}
-		}
-		if (triangles[i].is_collide_with_others)
-			std::cout << i << " ";
-	}
-	delete[] triangles;
+	std::cout << "\nWorking time = " << clock() - time << "ms\n";
+
 	return 0;
 }

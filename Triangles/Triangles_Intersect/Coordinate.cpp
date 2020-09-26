@@ -131,3 +131,102 @@ const bool operator!=(const Vector3F& a, const Vector3F& b)
 	return !(a == b);
 }
 
+Vector3I::Vector3I()
+{
+	x = 0;
+	y = 0;
+	z = 0;
+}
+
+Vector3I::Vector3I(int a, int b, int c)
+{
+	x = a;
+	y = b;
+	z = c;
+}
+
+Vector3I::Vector3I(const Vector3I& that)
+{
+	x = that.x;
+	y = that.y;
+	z = that.z;
+}
+
+const Vector3I operator/(const Vector3I& a, int b)
+{
+	return Vector3I(a.x / b, a.y / b, a.z / b);
+}
+
+const Vector3I& Vector3I::operator=(const Vector3I& that)
+{
+	x = that.x;
+	y = that.y;
+	z = that.z;
+	return *this;
+}
+
+const Vector3I& operator+(const Vector3I& that)
+{
+	return that;
+}
+const Vector3I operator-(const Vector3I& that)
+{
+	return Vector3I(-that.x, -that.y, -that.z);
+}
+
+const Vector3I& Vector3I::operator+=(const Vector3I& that)
+{
+	x += that.x;
+	y += that.y;
+	z += that.z;
+	return *this;
+}
+
+const Vector3I& Vector3I::operator-=(const Vector3I& that)
+{
+	x -= that.x;
+	y -= that.y;
+	z -= that.z;
+	return *this;
+}
+
+const Vector3I operator+(const Vector3I& a, const Vector3I& b)
+{
+	return Vector3I(a.x + b.x, a.y + b.y, a.z + b.z);
+}
+
+const Vector3I operator*(const Vector3I& a, const Vector3I& b)
+{
+	return Vector3I(a.x * b.x, a.y * b.y, a.z * b.z);
+}
+
+const Vector3I operator/(const Vector3I& a, const Vector3I& b)
+{
+	return Vector3I(a.x / b.x, a.y / b.y, a.z / b.z);
+}
+
+const Vector3I operator-(const Vector3I& a, const Vector3I& b)
+{
+	return Vector3I(a.x - b.x, a.y - b.y, a.z - b.z);
+}
+
+const Vector3I operator*(int a, const Vector3I& b)
+{
+	return Vector3I(a * b.x, a * b.y, a * b.z);
+}
+
+const Vector3I operator*(const Vector3I& a, int b)
+{
+	return Vector3I(a.x * b, a.y * b, a.z * b);
+}
+
+const bool operator==(const Vector3I& a, const Vector3I& b)
+{
+	return a.x == b.x && a.y == b.y && a.z == b.z;
+}
+
+const bool operator!=(const Vector3I& a, const Vector3I& b)
+{
+	return !(a == b);
+}
+

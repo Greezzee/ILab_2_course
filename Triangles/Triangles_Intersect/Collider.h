@@ -1,6 +1,7 @@
 #pragma once
 #include "PolygonCollider.h"
 #include "Coordinate.h"
+const float EPS = 0.00001f;
 class Collider
 {
 public:
