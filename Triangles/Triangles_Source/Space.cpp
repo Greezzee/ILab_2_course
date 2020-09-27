@@ -1,5 +1,5 @@
 #include "Space.h"
-
+#include <cmath>
 Space::Space() :
 	min_point_(Vector3F(INFINITY, INFINITY, INFINITY)), max_point_(Vector3F(-INFINITY, -INFINITY, -INFINITY)),
 	triangle_count_(0), quadric_space_size_(0), quadric_side_(Vector3F(0, 0, 0)) {}

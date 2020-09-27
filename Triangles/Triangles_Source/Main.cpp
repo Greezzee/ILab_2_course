@@ -3,11 +3,6 @@
 #include <iostream>
 #include <fstream>
 
-struct CollidableTriangle {
-	PolygonCollider collider;
-	bool is_collide_with_others = false;
-};
-
 int main()
 {
 	size_t triangle_count = 0;
