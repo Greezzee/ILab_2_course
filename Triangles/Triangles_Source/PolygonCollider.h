@@ -3,23 +3,24 @@
 #include "Coordinate.h"
 #include <vector>
 
-class PolygonCollider
-{
-public:
+namespace Collider {
+	class PolygonCollider
+	{
+	public:
 
-	PolygonCollider();
-	PolygonCollider(std::vector<Vector3F>& points);
+		PolygonCollider();
+		PolygonCollider(std::vector<Vector3F>& points);
 
-	void Init();
+		void Init();
 
-	void Init(std::vector<Vector3F>& points);
+		void Init(std::vector<Vector3F>& points);
 
-	unsigned GetPointsCount() const;
+		unsigned GetPointsCount() const;
 
-	Vector3F GetPoint(unsigned i) const;
+		Vector3F GetPoint(unsigned i) const;
 
-protected:
+	protected:
 
-	std::vector<Vector3F> _points;
-
-};
+		std::vector<Vector3F> _points;
+	};
+}

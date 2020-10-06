@@ -8,7 +8,7 @@ class Space
 public:
 	Space();
 
-	void AddTriangle(PolygonCollider col);
+	void AddTriangle(Collider::PolygonCollider col);
 
 	void CreateSpace();
 	void FindAndPrintCollidingTriangles();
@@ -19,7 +19,7 @@ private:
 
 	struct Triangle
 	{
-		PolygonCollider collider;
+		Collider::PolygonCollider collider;
 		bool is_collide_flag = false;
 		Vector3F min_point, max_point;
 		Vector3I min_space_point, max_space_point;

@@ -1,31 +1,31 @@
 #include "PolygonCollider.h"
 #include <cmath>
-PolygonCollider::PolygonCollider()
+Collider::PolygonCollider::PolygonCollider()
 {
 	Init();
 }
 
-PolygonCollider::PolygonCollider(std::vector<Vector3F>& points)
+Collider::PolygonCollider::PolygonCollider(std::vector<Vector3F>& points)
 {
 	Init(points);
 }
 
-void PolygonCollider::Init()
+void Collider::PolygonCollider::Init()
 {
 	_points.resize(0);
 }
 
-void PolygonCollider::Init(std::vector<Vector3F>& points)
+void Collider::PolygonCollider::Init(std::vector<Vector3F>& points)
 {
 	_points = points;
 }
 
 
-unsigned PolygonCollider::GetPointsCount() const
+unsigned Collider::PolygonCollider::GetPointsCount() const
 {
 	return _points.size();
 }
-Vector3F PolygonCollider::GetPoint(unsigned i) const
+Vector3F Collider::PolygonCollider::GetPoint(unsigned i) const
 {
 	return _points[i];
 }

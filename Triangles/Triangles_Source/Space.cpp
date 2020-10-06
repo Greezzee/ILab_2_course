@@ -4,7 +4,7 @@ Space::Space() :
 	min_point_(Vector3F(INFINITY, INFINITY, INFINITY)), max_point_(Vector3F(-INFINITY, -INFINITY, -INFINITY)),
 	triangle_count_(0), quadric_space_size_(0), quadric_side_(Vector3F(0, 0, 0)) {}
 
-void Space::AddTriangle(PolygonCollider col) {
+void Space::AddTriangle(Collider::PolygonCollider col) {
 	Triangle new_tri;
 	new_tri.collider = col;
 	new_tri.is_collide_flag = false;
@@ -62,7 +62,7 @@ void Space::CreateSpace() {
 void Space::FindAndPrintCollidingTriangles() {
 	for (int i = 0; i < triangle_count_; i++) {
 		if (triangles_[i].is_collide_flag) {
-			std::cout << i << " ";
+			std::cout << i << "\n";
 			continue;
 		}
 
@@ -73,7 +73,7 @@ void Space::FindAndPrintCollidingTriangles() {
 					CheckCollisionInQuadric(sp_tri, x, y, z);
 
 		if (triangles_[i].is_collide_flag) {
-			std::cout << i << " ";
+			std::cout << i << "\n";
 			continue;
 		}
 	}

@@ -6,6 +6,37 @@
 #include "Coordinate.h"
 #include "math.h"
 
+namespace {
+	//! Check if projections of two polygons to axis norm collide 
+	bool AxisIntersect(const Collider::PolygonCollider& a, const Collider::PolygonCollider& b, const Vector3F& norm)
+	{
+		float min_a, min_b, max_a, max_b;
+		min_a = max_a = Vector3F::ScalarMult(a.GetPoint(0), norm);
+		min_b = max_b = Vector3F::ScalarMult(b.GetPoint(0), norm);
+		unsigned a_s = a.GetPointsCount();
+		unsigned b_s = b.GetPointsCount();
+		for (unsigned j = 1; j < a_s; j++) //find all other projections
+		{
+			float len_a = Vector3F::ScalarMult(a.GetPoint(j), norm);
+			if (len_a < min_a)
+				min_a = len_a;
+			if (len_a > max_a)
+				max_a = len_a;
+		}
+
+		for (unsigned j = 1; j < b_s; j++)
+		{
+			float len_b = Vector3F::ScalarMult(b.GetPoint(j), norm);
+			if (len_b < min_b)
+				min_b = len_b;
+			if (len_b > max_b)
+				max_b = len_b;
+		}
+
+		return !(max_a - min_b <= -EPS || max_b - min_a <= -EPS);
+	}
+}
+
 bool Collider::IsCollide(const PolygonCollider& a, const PolygonCollider& b)
 {
 	unsigned a_s = a.GetPointsCount();
@@ -22,13 +53,14 @@ bool Collider::IsCollide(const PolygonCollider& a, const PolygonCollider& b)
 	for (size_t i = 0; i < b_s; i++)
 		axis_b[i + 1] = Vector3F::VectorMult(axis_b[0], b.GetPoint(i) - b.GetPoint((i + 1) % b_s));
 	
-	std::vector<Vector3F> test_axes((a_s + 1) * (b_s + 1));
-	for (size_t i = 0; i < a_s + 1; i++)
-		for (size_t j = 0; j < b_s + 1; j++)
-			test_axes[i * (b_s + 1) + j] = Vector3F::VectorMult(axis_a[i], axis_b[j]);
+	std::vector<Vector3F> test_axes;
 
 	test_axes.insert(test_axes.end(), axis_a.begin(), axis_a.end());
 	test_axes.insert(test_axes.end(), axis_b.begin(), axis_b.end());
+
+	for (size_t i = 0; i < a_s + b_s + 2; i++)
+		for (size_t j = i; j < a_s + b_s + 2; j++)
+			test_axes.push_back(Vector3F::VectorMult(test_axes[i], test_axes[j]));
 
 	size_t axes_count = test_axes.size();
 	for (size_t i = 0; i < axes_count; i++) {
@@ -38,33 +70,4 @@ bool Collider::IsCollide(const PolygonCollider& a, const PolygonCollider& b)
 	if (!AxisIntersect(a, b, {1, 1, 1}))
 		return false;
 	return true;
-}
-
-
-bool Collider::AxisIntersect(const PolygonCollider& a, const PolygonCollider& b, const Vector3F& norm)
-{
-	float min_a, min_b, max_a, max_b;
-	min_a = max_a = Vector3F::ScalarMult(a.GetPoint(0), norm);
-	min_b = max_b = Vector3F::ScalarMult(b.GetPoint(0), norm);
-	unsigned a_s = a.GetPointsCount();
-	unsigned b_s = b.GetPointsCount();
-	for (unsigned j = 1; j < a_s; j++) //find all other projections
-	{
-		float len_a = Vector3F::ScalarMult(a.GetPoint(j), norm);
-		if (len_a < min_a)
-			min_a = len_a;
-		if (len_a > max_a)
-			max_a = len_a;
-	}
-
-	for (unsigned j = 1; j < b_s; j++)
-	{
-		float len_b = Vector3F::ScalarMult(b.GetPoint(j), norm);
-		if (len_b < min_b)
-			min_b = len_b;
-		if (len_b > max_b)
-			max_b = len_b;
-	}
-
-	return !(max_a - min_b <= -EPS || max_b - min_a <= -EPS);
 }

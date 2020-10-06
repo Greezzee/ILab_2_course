@@ -1,0 +1,9 @@
+#!/bin/bash
+for (( i=1; i <= 12; i++ ))
+do
+echo "Test number $i"
+../Triangles_Main/triangles_main < Tests/$i.test > buffer$i.txt
+diff buffer$i.txt Tests/$i.ans
+rm buffer$i.txt
+echo "Test ended"
+done
