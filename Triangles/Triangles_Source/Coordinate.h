@@ -1,86 +1,103 @@
 #pragma once
-struct Vector3F
-{
-	float x, y, z;
+#include <cmath>
+namespace Vector {
+
+	const double EPS = 0.000001;
+
+	template <typename T>
+	struct Vector3
+	{
+		T x, y, z;
 	
-	//! Make vector (0, 0, 0)
-	Vector3F();
+		//! Make vector (0, 0, 0)
+		Vector3(): 
+			x(0), y(0), z(0) {}
 
-	//! Make vector (a, b, c)
-	Vector3F(float a, float b, float c);
+		//! Make vector (a, b, c)
+		Vector3(T a, T b, T c):
+			x(a), y(b), z(c) {}
 
-	Vector3F(const Vector3F& that);
+		Vector3(const Vector3& that):
+			x(that.x), y(that.y), z(that.z) {}
 
-	//! Return magnitude (lenght) of vector
-	float Magnitude() const;
+		//! Return magnitude (lenght) of vector
+		T Magnitude() const {
+			return std::sqrt(SqrMagnitude());
+		}
 
-	//! Return square of magnitude (lenght) of vector
-	float SqrMagnitude() const;
+		//! Return square of magnitude (lenght) of vector
+		T SqrMagnitude() const {
+			return x * x + y * y + z * z;
+		}
 
-	//! Return normalized vector. Don't change this vector
-	Vector3F Normalized() const;
+		//! Return normalized vector. Don't change this vector
+		Vector3 Normalized() const {
+			T magn = Magnitude();
+			return std::abs(magn) <= EPS ? *this : *this / magn;
+		}
 
-	//! Arithmetic operations is like ordinary vector operation in math.
-	/*!
-	* Added special operation: Vector3F * Vector3F and Vector3F / Vector3F
-	* (a1, b1, c1) * (a2, b2, c2) = (a1 * a2, b1 * b2, c1 * c2)
-	* (a1, b1, c1) / (a2, b2, c2) = (a1 / a2, b1 / b2, c1 / c2)
-	*/
-	const Vector3F& operator=(const Vector3F& that);
-	const Vector3F& operator+=(const Vector3F& that);
-	const Vector3F& operator-=(const Vector3F& that);
+		const Vector3& operator+=(const Vector3& that) {
+			x += that.x;
+			y += that.y;
+			z += that.z;
+			return *this;
+		}
+		const Vector3& operator-=(const Vector3& that) {
+			*this += -that;
+			return *this;
+		}
+	};
 
 	//! Scalar (dot) production
-	static float ScalarMult(const Vector3F& a, const Vector3F& b);
+	template <typename T> T ScalarMult(const Vector3<T>& a, const Vector3<T>& b) {
+		return a.x * b.x + a.y * b.y + a.z * b.z;
+	}
 
 	//! Vector (cross) production
-	static Vector3F VectorMult(const Vector3F& a, const Vector3F& b);
-};
-
-const Vector3F& operator+(const Vector3F& that);
-const Vector3F operator-(const Vector3F& that);
-const Vector3F operator+(const Vector3F& a, const Vector3F& b);
-const Vector3F operator*(const Vector3F& a, const Vector3F& b);
-const Vector3F operator/(const Vector3F& a, const Vector3F& b);
-const Vector3F operator-(const Vector3F& a, const Vector3F& b);
-const Vector3F operator*(float a, const Vector3F& b);
-const Vector3F operator*(const Vector3F& a, float b);
-const Vector3F operator/(const Vector3F& a, float b);
-const bool operator==(const Vector3F& a, const Vector3F& b);
-const bool operator!=(const Vector3F& a, const Vector3F& b);
-
-
-struct Vector3I
-{
-	int x, y, z;
-
-	//! Make vector (0, 0, 0)
-	Vector3I();
-
-	//! Make vector (a, b, c)
-	Vector3I(int a, int b, int c);
-
-	Vector3I(const Vector3I& that);
+	template <typename T> Vector3<T> VectorMult(const Vector3<T>& a, const Vector3<T>& b) {
+		T x = a.y * b.z - b.y * a.z;
+		T y = b.x * a.z - a.x * b.z;
+		T z = a.x * b.y - b.x * a.y;
+		return Vector3<T>(x, y, z);
+	}
 
 	//! Arithmetic operations is like ordinary vector operation in math.
 	/*!
-	* Added special operation: Vector3F * Vector3F and Vector3F / Vector3F
+	* Added special operation: Vector3 * Vector3 and Vector3 / Vector3
 	* (a1, b1, c1) * (a2, b2, c2) = (a1 * a2, b1 * b2, c1 * c2)
 	* (a1, b1, c1) / (a2, b2, c2) = (a1 / a2, b1 / b2, c1 / c2)
 	*/
-	const Vector3I& operator=(const Vector3I& that);
-	const Vector3I& operator+=(const Vector3I& that);
-	const Vector3I& operator-=(const Vector3I& that);
-};
 
-const Vector3I& operator+(const Vector3I& that);
-const Vector3I operator-(const Vector3I& that);
-const Vector3I operator+(const Vector3I& a, const Vector3I& b);
-const Vector3I operator*(const Vector3I& a, const Vector3I& b);
-const Vector3I operator/(const Vector3I& a, const Vector3I& b);
-const Vector3I operator-(const Vector3I& a, const Vector3I& b);
-const Vector3I operator*(float a, const Vector3I& b);
-const Vector3I operator*(const Vector3I& a, float b);
-const Vector3I operator/(const Vector3I& a, float b);
-const bool operator==(const Vector3I& a, const Vector3I& b);
-const bool operator!=(const Vector3I& a, const Vector3I& b);
+	template <typename T> const Vector3<T> operator-(const Vector3<T>& that) {
+			Vector3<T> new_vec(-that.x, -that.y, -that.z);
+			return new_vec;
+	}
+
+	template <typename T> const Vector3<T> operator+(const Vector3<T>& a, const Vector3<T>& b) {
+		return Vector3<T>(a.x + b.x, a.y + b.y, a.z + b.z);
+	}
+	template <typename T> const Vector3<T> operator*(const Vector3<T>& a, const Vector3<T>& b) {
+		return Vector3<T>(a.x * b.x, a.y * b.y, a.z * b.z);
+	}
+	template <typename T> const Vector3<T> operator/(const Vector3<T>& a, const Vector3<T>& b) {
+		return Vector3<T>(a.x / b.x, a.y / b.y, a.z / b.z);
+	}
+	template <typename T> const Vector3<T> operator-(const Vector3<T>& a, const Vector3<T>& b) {
+		return Vector3<T>(a.x - b.x, a.y - b.y, a.z - b.z);
+	}
+	template <typename T> const Vector3<T> operator*(T a, const Vector3<T>& b) {
+		return Vector3<T>(a * b.x, a * b.y, a * b.z);
+	}
+	template <typename T> const Vector3<T> operator*(const Vector3<T>& a, T b) {
+		return b * a;
+	}
+	template <typename T> const Vector3<T> operator/(const Vector3<T>& a, T b) {
+		return Vector3<T>(a.x / b, a.y / b, a.z / b);
+	}
+	template <typename T> const bool operator==(const Vector3<T>& a, const Vector3<T>& b) {
+		return a.x == b.x && a.y == b.y && a.z == b.z;
+	}
+	template <typename T> const bool operator!=(const Vector3<T>& a, const Vector3<T>& b) {
+		return !(a == b);
+	}
+}

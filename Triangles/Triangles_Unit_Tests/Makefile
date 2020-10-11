@@ -1,7 +1,7 @@
 all: triangles
 
-triangles: Test.o Space.o Collider.o PolygonCollider.o Coordinate.o
-	g++ Test.o Space.o Collider.o PolygonCollider.o Coordinate.o -o triangles_unit_test -lgtest -lgtest_main -lpthread
+triangles: Test.o Space.o Collider.o PolygonCollider.o
+	g++ Test.o Space.o Collider.o PolygonCollider.o -o triangles_unit_test -lgtest -lgtest_main -lpthread
 	rm -rf *.o triangles
 
 Test.o:
@@ -15,9 +15,6 @@ Collider.o:
 
 PolygonCollider.o:
 	g++ -c ../Triangles_Source/PolygonCollider.cpp -lm
-
-Coordinate.o:
-	g++ -c ../Triangles_Source/Coordinate.cpp -lm
 
 clean:
 	rm -rf *.o triangles

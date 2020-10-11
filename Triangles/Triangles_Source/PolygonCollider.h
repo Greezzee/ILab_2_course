@@ -9,18 +9,18 @@ namespace Collider {
 	public:
 
 		PolygonCollider();
-		PolygonCollider(std::vector<Vector3F>& points);
+		PolygonCollider(std::vector<Vector::Vector3<double>>& points);
 
 		void Init();
 
-		void Init(std::vector<Vector3F>& points);
+		void Init(std::vector<Vector::Vector3<double>>& points);
 
 		unsigned GetPointsCount() const;
 
-		Vector3F GetPoint(unsigned i) const;
+		Vector::Vector3<double> GetPoint(unsigned i) const;
 
-	protected:
+	private:
 
-		std::vector<Vector3F> _points;
+		std::vector<Vector::Vector3<double>> _points;
 	};
 }

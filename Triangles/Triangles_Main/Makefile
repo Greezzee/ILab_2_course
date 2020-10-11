@@ -1,7 +1,7 @@
 all: triangles
 
-triangles: Main.o Space.o Collider.o PolygonCollider.o Coordinate.o
-	g++ Main.o Space.o Collider.o PolygonCollider.o Coordinate.o -o triangles_main -O2
+triangles: Main.o Space.o Collider.o PolygonCollider.o
+	g++ Main.o Space.o Collider.o PolygonCollider.o -o triangles_main -O2
 	rm -rf *.o triangles
 
 Main.o:
@@ -15,9 +15,6 @@ Collider.o:
 
 PolygonCollider.o:
 	g++ -c ../Triangles_Source/PolygonCollider.cpp -lm -O2
-
-Coordinate.o:
-	g++ -c ../Triangles_Source/Coordinate.cpp -lm -O2
 
 clean:
 	rm -rf *.o triangles

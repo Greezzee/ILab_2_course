@@ -1,15 +1,12 @@
 #include "Space.h"
 #include <cmath>
-Space::Space() :
-	min_point_(Vector3F(INFINITY, INFINITY, INFINITY)), max_point_(Vector3F(-INFINITY, -INFINITY, -INFINITY)),
-	triangle_count_(0), quadric_space_size_(0), quadric_side_(Vector3F(0, 0, 0)) {}
 
-void Space::AddTriangle(Collider::PolygonCollider col) {
+void Collider::Space::AddTriangle(Collider::PolygonCollider col) {
 	Triangle new_tri;
 	new_tri.collider = col;
 	new_tri.is_collide_flag = false;
-	new_tri.max_point = Vector3F(-INFINITY, -INFINITY, -INFINITY);
-	new_tri.min_point = Vector3F(INFINITY, INFINITY, INFINITY);
+	new_tri.max_point = Vector::Vector3<double>{-INFINITY, -INFINITY, -INFINITY};
+	new_tri.min_point = Vector::Vector3<double>{INFINITY, INFINITY, INFINITY};
 
 	for (int i = 0; i < col.GetPointsCount(); i++) {
 		auto point = col.GetPoint(i);
@@ -34,12 +31,12 @@ void Space::AddTriangle(Collider::PolygonCollider col) {
 	triangle_count_++;
 }
 
-void Space::CreateSpace() {
-	quadric_space_size_ = (int)(powf((float)triangle_count_, 0.33333f)) + 1;
+void Collider::Space::CreateSpace() {
+	quadric_space_size_ = (int)(powf((double)triangle_count_, 0.33333f)) + 1;
 
-	quadric_side_.x = std::max((max_point_.x - min_point_.x) / (float)quadric_space_size_, EPS);
-	quadric_side_.y = std::max((max_point_.x - min_point_.x) / (float)quadric_space_size_, EPS);
-	quadric_side_.z = std::max((max_point_.x - min_point_.x) / (float)quadric_space_size_, EPS);
+	quadric_side_.x = std::max((max_point_.x - min_point_.x) / (double)quadric_space_size_, EPS);
+	quadric_side_.y = std::max((max_point_.x - min_point_.x) / (double)quadric_space_size_, EPS);
+	quadric_side_.z = std::max((max_point_.x - min_point_.x) / (double)quadric_space_size_, EPS);
 
 	for (int i = 0; i < triangle_count_; i++) {
 		Triangle* sp_tri = &(triangles_[i]);
@@ -55,11 +52,11 @@ void Space::CreateSpace() {
 		for (int x = sp_tri->min_space_point.x; x <= sp_tri->max_space_point.x; x++)
 			for (int y = sp_tri->min_space_point.y; y <= sp_tri->max_space_point.y; y++)
 				for (int z = sp_tri->min_space_point.z; z <= sp_tri->max_space_point.z; z++)
-					AddElem(sp_tri, x, y, z);
+					AddElem(sp_tri, Vector::Vector3<int>{x, y, z});
 	}
 }
 
-void Space::FindAndPrintCollidingTriangles() {
+void Collider::Space::FindAndPrintCollidingTriangles() {
 	for (int i = 0; i < triangle_count_; i++) {
 		if (triangles_[i].is_collide_flag) {
 			std::cout << i << "\n";
@@ -70,41 +67,28 @@ void Space::FindAndPrintCollidingTriangles() {
 		for (int x = sp_tri->min_space_point.x; x <= sp_tri->max_space_point.x; x++)
 			for (int y = sp_tri->min_space_point.y; y <= sp_tri->max_space_point.y; y++)
 				for (int z = sp_tri->min_space_point.z; z <= sp_tri->max_space_point.z; z++)
-					CheckCollisionInQuadric(sp_tri, x, y, z);
+					CheckCollisionInQuadric(sp_tri, Vector::Vector3<int>{x, y, z});
 
 		if (triangles_[i].is_collide_flag) {
 			std::cout << i << "\n";
-			continue;
 		}
 	}
 }
 
-void Space::ClearTriangles() {
-	ClearSpace();
-	min_point_ = Vector3F(INFINITY, INFINITY, INFINITY);
-	max_point_ = Vector3F(-INFINITY, -INFINITY, -INFINITY);
-	triangle_count_ = 0;
-	triangles_.clear();
-}
-
-void Space::ClearSpace() {
+void Collider::Space::ClearSpace() {
 	quadric_space_.clear();
 	quadric_space_size_ = 0;
 	quadric_side_ = { 0, 0, 0 };
 }
 
-void Space::AddElem(Triangle* new_obj, int x, int y, int z) {
-	quadric_space_[x][y][z].insert(new_obj);
-}
-
-void Space::CheckCollisionInQuadric(Triangle* obj, int x, int y, int z) {
-	auto a = quadric_space_.find(x);
+void Collider::Space::CheckCollisionInQuadric(Triangle* obj, Vector::Vector3<int> pos) {
+	auto a = quadric_space_.find(pos.x);
 	if (a == quadric_space_.end())
 		return;
-	auto b = a->second.find(y);
+	auto b = a->second.find(pos.y);
 	if (b == a->second.end())
 		return;
-	auto c = b->second.find(z);
+	auto c = b->second.find(pos.z);
 	if (c == b->second.end())
 		return;
 	auto quadric = c->second;

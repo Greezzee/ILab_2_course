@@ -1,7 +1,7 @@
 #pragma once
 #include "PolygonCollider.h"
 #include "Coordinate.h"
-const float EPS = 0.00001f;
+const double EPS = 0.0000001;
 namespace Collider
 {
 	//! Check if two polygons collide
