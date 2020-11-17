@@ -28,6 +28,8 @@ namespace Collider {
 			Vector::Vector3<int> min_space_point, max_space_point;
 
 			std::set<Triangle*> collided_triangles;
+
+			int id;
 		};
 
 		size_t triangle_count_;

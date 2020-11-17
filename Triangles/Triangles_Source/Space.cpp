@@ -7,6 +7,7 @@ void Collider::Space::AddTriangle(Collider::PolygonCollider col) {
 	new_tri.is_collide_flag = false;
 	new_tri.max_point = Vector::Vector3<double>{-INFINITY, -INFINITY, -INFINITY};
 	new_tri.min_point = Vector::Vector3<double>{INFINITY, INFINITY, INFINITY};
+	new_tri.id = triangles_.size();
 
 	for (int i = 0; i < col.GetPointsCount(); i++) {
 		auto point = col.GetPoint(i);
@@ -59,7 +60,11 @@ void Collider::Space::CreateSpace() {
 void Collider::Space::FindAndPrintCollidingTriangles() {
 	for (int i = 0; i < triangle_count_; i++) {
 		if (triangles_[i].is_collide_flag) {
-			std::cout << i << "\n";
+			std::cout << i << "\n{";
+			for (auto j = triangles_[i].collided_triangles.begin(); j != triangles_[i].collided_triangles.end(); ++j) {
+				std::cout << (*j)->id << " ";
+			}
+			std::cout << "}\n";
 			continue;
 		}
 
@@ -70,7 +75,11 @@ void Collider::Space::FindAndPrintCollidingTriangles() {
 					CheckCollisionInQuadric(sp_tri, Vector::Vector3<int>{x, y, z});
 
 		if (triangles_[i].is_collide_flag) {
-			std::cout << i << "\n";
+			std::cout << i << "\n{";
+			for (auto j = triangles_[i].collided_triangles.begin(); j != triangles_[i].collided_triangles.end(); ++j) {
+				std::cout << (*j)->id << " ";
+			}
+			std::cout << "}\n";
 		}
 	}
 }
@@ -100,6 +109,7 @@ void Collider::Space::CheckCollisionInQuadric(Triangle* obj, Vector::Vector3<int
 					(*x)->is_collide_flag = true;
 					obj->is_collide_flag = true;
 					obj->collided_triangles.insert(*x);
+					(*x)->collided_triangles.insert(obj);
 				}
 		}
 	}
